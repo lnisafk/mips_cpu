@@ -1,0 +1,16 @@
+lui   $s1, 0xffff        		# $s1 = 0xffff0000（高位加载）  
+ori   $s2, $s3, 0x3333   		# $s2 = $s3 | 0x3333
+addu  $s3, $s1, $s2      		# $s3 = $s1 + $s2
+subu  $s4, $s3, $s1     		# $s4 = $s3 - $s1
+beq   $s2, $s4, 0x0002    		# if $s2==$s4跳转  
+nop*2
+sw    $s1, 0x4($s2)     		# MEM[$s2+4] = $s1
+lw    $s5, 0x4($s2)      		# $s5 = MEM[$s2+4]
+addi  $s1, $s1, 0x4444   		# $s1 = $s1 + 0x4444 
+addi  $s1, $s1, 0x4444
+jal   func               		# 跳转到func，$ra = PC+8
+nop*4
+func: slt   $s6, $s1, $s2       # $s6 = ($s1 < $s2) ? 1 : 0 
+slt   $s6, $s2, $s1             # $s6 = ($s2 < $s1) ? 1 : 0 
+jr    $ra                       # 返回调用点
+nop
