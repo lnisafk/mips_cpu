@@ -1,0 +1,3 @@
+iverilog -o mips_cpu ./cpu/*.v ./cpu/pipeline/*.v ./cpu/controller/*.v ./cpu/datapath/*.v
+vvp -n mips_cpu
+gtkwave .\mips.vcd

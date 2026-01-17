@@ -2,7 +2,8 @@
 module decode(
     input [31:0] Instr_ID,
     output addu, subu, ori, lw, sw, beq, lui,addi, addiu, slt, j, jal, jr,
-    output [4:0] A1, A2, A3
+    output [4:0] A1, A2,
+    output reg [4:0] A3
 );
     wire R;
     wire [5:0] op = Instr_ID[31:26];
@@ -23,7 +24,10 @@ module decode(
 	assign lui   = (op == 6'b001111);
     assign A1 = Instr_ID[25:21];
     assign A2 = Instr_ID[20:16];
-    assign A3 = (addu|subu|slt)?Instr_ID[15:11]:
-				(ori|lw|lui|addi|addiu)?Instr_ID[20:16]:
-				(jal)?5'd31:0;
+    always @(*) begin
+        if (addu | subu | slt)                  A3 = Instr_ID[15:11];
+        else if (ori | lw | lui | addi | addiu) A3 = Instr_ID[20:16];
+        else if (jal)                           A3 = 5'd31;
+        else                                    A3 = 0;
+    end
 endmodule

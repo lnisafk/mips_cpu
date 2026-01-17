@@ -1,5 +1,4 @@
 `timescale 1ns / 1ps
-`include "./0_mips.v"
 module tb;
   reg clk, rst;
   

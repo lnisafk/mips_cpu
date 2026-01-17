@@ -1,5 +1,3 @@
-`include "./datapath/PC.v"
-`include "./datapath/IM.v"
 module Stage_IF (
     input [1:0] PcSrc,
     input [31:0] Address_ID,

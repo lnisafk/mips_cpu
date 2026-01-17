@@ -1,5 +1,3 @@
-`include "./datapath/DM.v"
-`include "./datapath/DCache.v"
 module Stage_MEM(
     input clk, rst,
 	input [31:0] MemWd, ALUres_MEM, ALUres_WB, MemRd_WB, ExtImm_WB,
@@ -9,12 +7,17 @@ module Stage_MEM(
 	output [31:0] MemRd,
 	output mem_stall              // 缓存未命中时暂停流水线
 );
-    wire [31:0] MemWd_Fwd;
-    assign MemWd_Fwd = (MemWd_Fwd_ctr == 0)?MemWd:
-                       (MemWd_Fwd_ctr == 1)?ExtImm_WB:
-                       (MemWd_Fwd_ctr == 2)?ALUres_WB:
-				       (MemWd_Fwd_ctr == 3)?MemRd_WB:0;
-					// 考虑jal写r31，但是一般不读r31的内容
+    reg [31:0] MemWd_Fwd;
+    always @(*) begin
+        case (MemWd_Fwd_ctr)
+            2'd0: MemWd_Fwd = MemWd;
+            2'd1: MemWd_Fwd = ExtImm_WB;
+            2'd2: MemWd_Fwd = ALUres_WB;
+            2'd3: MemWd_Fwd = MemRd_WB;
+            default: MemWd_Fwd = 32'd0;
+        endcase
+    end
+	// 考虑jal写r31，但是一般不读r31的内容
 	wire [31:0] mem_rdata;
     wire        cache_ready;
     wire [31:0] mem_addr;

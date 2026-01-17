@@ -1,16 +1,3 @@
-`include "./pipeline/1_stage_IF.v"
-`include "./pipeline/2_reg_IFID.v"
-`include "./pipeline/3_stage_ID.v"
-`include "./pipeline/4_reg_IDEX.v"
-`include "./pipeline/5_stage_EX.v"
-`include "./pipeline/6_reg_EXMEM.v"
-`include "./pipeline/7_stage_MEM.v"
-`include "./pipeline/8_reg_MEMWB.v"
-`include "./controller/decode.v"
-`include "./controller/MCU.v"
-`include "./controller/FCU.v"
-`include "./controller/HCU.v"
-`include "./controller/AT.v"
 module mips (
     input clk, rst
 );
@@ -70,7 +57,7 @@ module mips (
         .A3_WB(A3_WB)
 	);
     IDEX IDEX(
-        .clk(clk), .rst(rst), .stall(stall),
+        .clk(clk), .rst(rst), .stall(stall), .mem_stall(mem_stall_MEM),
         .Rd1_ID(Rd1_Fwd), .Rd2_ID(Rd2_Fwd), .ExtImm_ID(ExtImm_ID),
         .pc4_ID(pc4_ID), .Instr_ID(Instr_ID),
         .A3_ID(A3_ID), .A2_ID(A2_ID), .A1_ID(A1_ID),

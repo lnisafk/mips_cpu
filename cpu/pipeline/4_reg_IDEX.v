@@ -1,5 +1,5 @@
 module IDEX(
-	input clk, rst, stall,
+	input clk, rst, stall, mem_stall,
 	input [31:0] Rd1_ID, Rd2_ID, ExtImm_ID,
 	input [31:0] pc4_ID, Instr_ID,
     input [4:0] A3_ID, A2_ID, A1_ID,
@@ -16,7 +16,7 @@ module IDEX(
     output reg [3:0] ALUctr_EX
     );
 	always@(posedge clk) begin
-		if(rst|stall) begin
+		if(rst) begin
 			Rd1_EX <= 0;
 			Rd2_EX <= 0;
 			ExtImm_EX <= 0;
@@ -33,8 +33,26 @@ module IDEX(
 			cal_EX <= 0;
 			load_EX <= 0;
 			Instr_EX <= 0;
-		end
-		else begin
+		end else if (mem_stall) begin
+			// do nothing
+		end else if (stall) begin
+			Rd1_EX <= 0;
+			Rd2_EX <= 0;
+			ExtImm_EX <= 0;
+			pc4_EX <= 0;
+			ALUsrc_EX <= 0;
+			MemtoReg_EX <= 0;
+			RegWrite_EX <= 0;
+			MemWrite_EX <= 0;			
+            ALUctr_EX <= 0;
+			A1_EX <= 0;
+			A2_EX <= 0;
+			A3_EX <= 0;
+			Tnew_EX <= 0;
+			cal_EX <= 0;
+			load_EX <= 0;
+			Instr_EX <= 0;
+		end else begin
 			Rd1_EX <= Rd1_ID;
 			Rd2_EX <= Rd2_ID;
 			ExtImm_EX <= ExtImm_ID;
